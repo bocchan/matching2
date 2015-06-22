@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 def deferred_acceptance(prop_prefs, resp_prefs):
     
     prop_num = len(prop_prefs)
@@ -11,6 +12,21 @@ def deferred_acceptance(prop_prefs, resp_prefs):
     resp_matched = [resp_unmatched for z in range(resp_num)]
     
     counter = [0 for p in range(prop_num)]
+=======
+# -*- coding: utf-8 -*-
+"""
+http://skzy.hatenablog.com/entry/2013/01/26/050459
+http://ja.wikipedia.org/wiki/%E5%AE%89%E5%AE%9A%E7%B5%90%E5%A9%9A%E5%95%8F%E9%A1%8C
+http://toyokeizai.net/articles/-/11584?page=2
+http://docs.python.jp/2/tutorial/datastructures.html
+"""
+def deferred_acceptance(arg1, arg2):
+    #受け取るデータはself.m_prefsとself.f_prefs
+    single = range(len(arg1))
+    print single
+    for i in range(len(arg1)):
+        arg1[i].reverse()
+>>>>>>> origin/develop
     
     while len(single)>0:
         x = single.pop(0)
@@ -35,6 +51,7 @@ def deferred_acceptance(prop_prefs, resp_prefs):
                     counter[x] += 1
     
     
+<<<<<<< HEAD
     return prop_matched, resp_matched
 =======
 <<<<<<< HEAD
@@ -121,3 +138,6 @@ def deferred_acceptance(arg1, arg2):
     return arg1_matched, arg2_matched
 >>>>>>> origin/develop
 >>>>>>> 6fc7812e81dbcee3505791f32134666989c2e6eb
+=======
+    return arg1_matched, arg2_matched
+>>>>>>> origin/develop
