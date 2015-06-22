@@ -5,32 +5,29 @@ http://ja.wikipedia.org/wiki/%E5%AE%89%E5%AE%9A%E7%B5%90%E5%A9%9A%E5%95%8F%E9%A1
 http://toyokeizai.net/articles/-/11584?page=2
 http://docs.python.jp/2/tutorial/datastructures.html
 """
-def deferred_acceptance():
-
-#M,Fのindexが男性の名前を表し、内包されているリストが選好を表します。
-    M = [[2,1,0], [1,2,0], [1,0,2]]
-    F = [[1,0,2], [1,0,2], [0,2,1]]
-#Mの名前をただ定義します。
-    single = [0, 1, 2]
-#女性から見た相手のリストを仮に作ります。
-    pair = [-1, -1, -1]
-
-
-
-
-#アルゴリズムを実行します。
+def deferred_acceptance(arg1, arg2):
+    #受け取るデータはself.m_prefsとself.f_prefs
+    single = range(len(arg1))
+    print single
+    for i in range(len(arg1)):
+        arg1[i].reverse()
+    
+    arg1_matched = [len(arg2) for w in arg1]
+    print arg1_matched
+    arg2_matched = [len(arg1) for z in arg2]
+    print arg2_matched
     while len(single)>0:
         x = single.pop()
-        y = M[x].pop()
-        if pair[y] != -1:
-            if F[y].index(pair[y]) < F[y].index(x):
-                single.insert(0, pair[y])
-                pair[y] = x
-            else:
-                single.insert(0, x)
+        y = arg1[x].pop()
+        if arg1_matched[y] == len(arg2):
+            arg1_matched[y] = x
         else:
-            pair[y] = x
-        return pair
-#ペア成立した組を表示します。(M,,F)の順
-for i in pair :
-    print (pair[i], i)
+            if arg2[y].index(arg2_matched[y])<arg2[y].index(x):
+                single.insert(0, x)
+            else:
+                single.insert(0, arg2_matched[y])
+                arg2_matched[y] = x
+     
+    
+    
+    return arg1_matched, arg2_matched
