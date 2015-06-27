@@ -2,14 +2,14 @@
     
     prop_num = len(prop_prefs)
     resp_num = len(resp_prefs)
-    single = range(prop_num)
+    single = list(range(prop_num))
     prop_unmatched = resp_num
     resp_unmatched = prop_num
     
-    prop_matched = [prop_unmatched for w in range(prop_num)]
-    resp_matched = [resp_unmatched for z in range(resp_num)]
+    prop_matched = [prop_unmatched for w in list(range(prop_num))]
+    resp_matched = [resp_unmatched for z in list(range(resp_num))]
     
-    counter = [0 for p in range(prop_num)]
+    counter = [0 for p in list(range(prop_num))]
     
     while len(single)>0:
         x = single.pop(0)
