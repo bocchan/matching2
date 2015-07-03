@@ -71,3 +71,7 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
                         counter[x] += 1
 
     return prop_matched, resp_matched
+
+def cumsum(list, n):
+    s = sum(list[0:n])
+    return s
