@@ -22,22 +22,17 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
         y = prop_prefs[x][counter[x]]
         if y != prop_unmatched:
             if caps_cntr[y] > 1:
-                if y == 0:
-                    resp_matched[caps_cntr[y]-1] = x
-                    prop_matched[x] = y
-                    caps_cntr[y] = caps_cntr[y] - 1
-                if y > 0:
-                    now_y = cumsum(caps, y-1) + caps_cntr - 2
-                    resp_matched[now_y] = x
-                    prop_matched[x] = y
-                    caps_cntr[y] = caps_cntr[y] - 1
+                now_y = sum(caps[:y]) + caps_cntr - 2
+                resp_matched[now_y] = x
+                prop_matched[x] = y
+                caps_cntr[y] = caps_cntr[y] - 1
             else:
                 if resp_matched[y] == resp_unmatched:
                     if resp_prefs[y].index(resp_unmatched) > resp_prefs[y].index(x):
                         if y == 0:
                             args_y = caps[y] - 1
                         else:
-                            args_y = cumsum(caps, y-1) - 1
+                            args_y = sum(caps[:y]) - 1
                         resp_matched[args_y] = x
                         prop_matched[x] = y
                     else:
@@ -47,7 +42,7 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
                     m = caps[y]
                     pooled = []
                     while m > 0:
-                        pooled_psn = resp_matched[cumsum(caps, y) - caps[y] + m -1]
+                        pooled_psn = resp_matched[sum(caps[:y+1]) - caps[y] + m -1]
                         pooled.append(pooled_psn)
                         m = m - 1
                     pooled_index = []
@@ -71,7 +66,3 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
                         counter[x] += 1
 
     return prop_matched, resp_matched
-
-def cumsum(list, n):
-    s = sum(list[0:n])
-    return s
