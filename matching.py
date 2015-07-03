@@ -1,8 +1,14 @@
+import numpy as np
+
 def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
     
     if caps == None:
         caps = [1 for i in list(range(len(resp_prefs)))]
-
+    else:
+        indptr = np.empty(n+1, dtype=int)
+        indptr[0] = 0
+        np.cumsum(caps, out=indptr[1:])
+    
     caps_cntr = list(caps)
     
     prop_num = len(prop_prefs)
@@ -65,4 +71,4 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
                         single.insert(0, x)
                         counter[x] += 1
 
-    return prop_matched, resp_matched
+    return prop_matched, resp_matched, indptr
