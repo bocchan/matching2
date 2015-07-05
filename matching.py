@@ -1,10 +1,11 @@
 import numpy as np
 
+
 def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
-    
+
     prop_num = len(prop_prefs)
     resp_num = len(resp_prefs)
-    
+
     if caps is None:
         indptr = np.arange(resp_num+1)
         caps_cp = [1 for h in list(range(len(resp_prefs)))]
@@ -13,9 +14,9 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
         indptr[0] = 0
         np.cumsum(caps, out=indptr[1:])
         caps_cp = caps
-        
+
     caps_cntr = list(caps_cp)
-    
+
     single = list(range(prop_num))
     prop_unmatched = resp_num
     resp_unmatched = prop_num
@@ -24,7 +25,7 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
     resp_matched = [resp_unmatched for k in list(range(sum(caps_cp)))]
     counter = [0 for l in list(range(prop_num))]
 
-    while len(single)>0:
+    while len(single) > 0:
         x = single.pop(0)
         y = prop_prefs[x][counter[x]]
         if y != prop_unmatched:
@@ -56,7 +57,6 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
                     single.insert(0, x)
                     counter[x] += 1
 
-                
     if caps is None:
         return prop_matched, resp_matched
     else:
