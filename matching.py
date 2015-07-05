@@ -5,18 +5,6 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
 
     prop_num = len(prop_prefs)
     resp_num = len(resp_prefs)
-<<<<<<< .merge_file_a06920
-    single = list(range(prop_num))
-    prop_unmatched = resp_num
-    resp_unmatched = prop_num
-    
-    prop_matched = [prop_unmatched for w in list(range(prop_num))]
-    resp_matched = [resp_unmatched for z in list(range(resp_num))]
-    
-    counter = [0 for p in list(range(prop_num))]
-    
-    while len(single)>0:
-=======
 
     if caps is None:
         indptr = np.arange(resp_num+1)
@@ -38,7 +26,6 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
     counter = [0 for l in list(range(prop_num))]
 
     while len(single) > 0:
->>>>>>> .merge_file_a07108
         x = single.pop(0)
         y = prop_prefs[x][counter[x]]
         if y != prop_unmatched:
