@@ -2,17 +2,19 @@ import numpy as np
 
 def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
     
-    if caps == None:
-        caps = [1 for i in list(range(len(resp_prefs)))]
+    prop_num = len(prop_prefs)
+    resp_num = len(resp_prefs)
+    
+    if caps is None:
+        indptr = np.arange(resp_num+1)
+        caps = [1 for h in list(range(len(resp_prefs)))]
     else:
-        indptr = np.empty(n+1, dtype=int)
+        indptr = np.empty(resp_num+1, dtype=int)
         indptr[0] = 0
         np.cumsum(caps, out=indptr[1:])
     
     caps_cntr = list(caps)
     
-    prop_num = len(prop_prefs)
-    resp_num = len(resp_prefs)
     single = list(range(prop_num))
     prop_unmatched = resp_num
     resp_unmatched = prop_num
@@ -23,52 +25,37 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
 
     while len(single)>0:
         x = single.pop(0)
-        print x
-        print counter
         y = prop_prefs[x][counter[x]]
         if y != prop_unmatched:
-            if caps_cntr[y] > 1:
-                now_y = sum(caps[:y]) + caps_cntr - 2
-                resp_matched[now_y] = x
-                prop_matched[x] = y
-                caps_cntr[y] = caps_cntr[y] - 1
-            else:
-                if resp_matched[y] == resp_unmatched:
-                    if resp_prefs[y].index(resp_unmatched) > resp_prefs[y].index(x):
-                        if y == 0:
-                            args_y = caps[y] - 1
-                        else:
-                            args_y = sum(caps[:y]) - 1
-                        resp_matched[args_y] = x
-                        prop_matched[x] = y
-                    else:
-                        single.insert(0, x)
-                        counter[x] += 1
+            if caps_cntr[y] >= 1:
+                if resp_prefs[y].index(resp_unmatched) > resp_prefs[y].index(x):
+                    now_y = sum(caps[:y]) + caps_cntr[y] - 2
+                    resp_matched[now_y] = x
+                    prop_matched[x] = y
+                    caps_cntr[y] = caps_cntr[y] - 1
                 else:
-                    m = caps[y]
-                    pooled = []
-                    while m > 0:
-                        pooled_psn = resp_matched[sum(caps[:y+1]) - caps[y] + m -1]
-                        pooled.append(pooled_psn)
-                        m = m - 1
-                    pooled_index = []
-                    for n in pooled:
-                        pooled_index.append(resp_prefs[y].index(n))
-                    worst = max(pooled_index)
-                    worst_psn = resp_prefs[y][worst]
-                    
-                    if x != worst_psn:
-                        if worst_psn != resp_unmatched:
-                            single.insert(0, worst_psn)
-                            prop_matched[worst_psn] = prop_unmatched
-                            resp_matched[resp_matched.index(worst_psn)] = x
-                            prop_matched[x] = y
-                            counter[worst_psn] += 1
-                        else:
-                            prop_matched[x] = y
-                            
-                    else:
-                        single.insert(0, x)
-                        counter[x] += 1
+                    pass
+            else:
+                m = caps[y]
+                pooled = resp_matched[indptr[y]:indptr[y+1]]
+                pooled_index = []
+                for n in pooled:
+                    pooled_index.append(resp_prefs[y].index(n))
+                worst = max(pooled_index)
+                worst_psn = resp_prefs[y][worst]
 
-    return prop_matched, resp_matched, indptr
+                if resp_prefs[y].index(worst_psn) > resp_prefs[y].index(x):
+                    single.insert(0, worst_psn)
+                    prop_matched[worst_psn] = prop_unmatched
+                    resp_matched[resp_matched.index(worst_psn)] = x
+                    prop_matched[x] = y
+                    counter[worst_psn] += 1
+                else:
+                    single.insert(0, x)
+                    counter[x] += 1
+
+                
+    if caps is None:
+        return prop_matched, resp_matched
+    else:
+        return prop_matched, resp_matched, indptr
