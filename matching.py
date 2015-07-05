@@ -7,20 +7,21 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
     
     if caps is None:
         indptr = np.arange(resp_num+1)
-        caps = [1 for h in list(range(len(resp_prefs)))]
+        caps_cp = [1 for h in list(range(len(resp_prefs)))]
     else:
         indptr = np.empty(resp_num+1, dtype=int)
         indptr[0] = 0
         np.cumsum(caps, out=indptr[1:])
-    
-    caps_cntr = list(caps)
+        caps_cp = caps
+        
+    caps_cntr = list(caps_cp)
     
     single = list(range(prop_num))
     prop_unmatched = resp_num
     resp_unmatched = prop_num
 
     prop_matched = [prop_unmatched for j in list(range(prop_num))]
-    resp_matched = [resp_unmatched for k in list(range(sum(caps)))]
+    resp_matched = [resp_unmatched for k in list(range(sum(caps_cp)))]
     counter = [0 for l in list(range(prop_num))]
 
     while len(single)>0:
@@ -29,14 +30,15 @@ def deferred_acceptance(prop_prefs, resp_prefs, caps=None):
         if y != prop_unmatched:
             if caps_cntr[y] >= 1:
                 if resp_prefs[y].index(resp_unmatched) > resp_prefs[y].index(x):
-                    now_y = sum(caps[:y]) + caps_cntr[y] - 2
+                    now_y = sum(caps_cp[:y]) + caps_cntr[y] - 1
                     resp_matched[now_y] = x
                     prop_matched[x] = y
                     caps_cntr[y] = caps_cntr[y] - 1
                 else:
-                    pass
+                    single.insert(0, x)
+                    counter[x] += 1
             else:
-                m = caps[y]
+                m = caps_cp[y]
                 pooled = resp_matched[indptr[y]:indptr[y+1]]
                 pooled_index = []
                 for n in pooled:
